@@ -24,6 +24,13 @@ FOREIGN KEY (role_id)
 REFERENCES roles (role_id)
 );
 
+CREATE TABLE author (
+author_id INT NOT NULL,
+first_name VARCHAR(45),
+last_name VARCHAR(45),
+PRIMARY KEY (author_id)
+);
+
 CREATE TABLE book_info (
 book_id INT NOT NULL,
 author VARCHAR(45),
@@ -61,6 +68,27 @@ FOREIGN KEY (user_id)
 REFERENCES person (user_id),
 FOREIGN KEY (address_id)
 REFERENCES address (address_id)
+);*/
+
+
+
+
+/*ALTER TABLE book_info DROP COLUMN author;
+ALTER TABLE book_info ADD COLUMN author INT NOT NULL;
+ALTER TABLE book_info ADD PRIMARY KEY (author);*/
+
+/*ALTER TABLE book_info ADD CONSTRAINT test FOREIGN KEY (author) REFERENCES author (author_id);*/
+
+/* TAKTO MA BYT BOOK_INFO */
+/*CREATE TABLE book_info (
+book_id INT NOT NULL,
+author_id INT NOT NULL,
+name VARCHAR(45),
+year VARCHAR(45),
+isbn VARCHAR(45),
+PRIMARY KEY (book_id, author_id),
+FOREIGN KEY (author_id)
+REFERENCES author (author_id)
 );*/
 
 
