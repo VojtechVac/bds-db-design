@@ -91,4 +91,18 @@ FOREIGN KEY (author_id)
 REFERENCES author (author_id)
 );*/
 
+/*CREATE TABLE transactions (
+user_id INT NOT NULL,
+book_id INT NOT NULL,
+date_borrowed DATETIME NOT NULL,
+date_due DATETIME NOT NULL,
+date_returned DATETIME NOT NULL,
+PRIMARY KEY (user_id, book_id),
+FOREIGN KEY (user_id)
+REFERENCES person (user_id),
+FOREIGN KEY (book_id)
+REFERENCES book_info (book_id)
+);*/
+
+
 
