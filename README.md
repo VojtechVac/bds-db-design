@@ -17,5 +17,6 @@ Database tables and columns must be named with English terms   - X
 +----------------------+
 
 DB téma: 
+Knižničný systém
 
 
