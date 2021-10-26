@@ -89,9 +89,9 @@ isbn VARCHAR(45),
 PRIMARY KEY (book_id, author_id),
 FOREIGN KEY (author_id)
 REFERENCES author (author_id)
-);*/
+);
 
-/*CREATE TABLE transactions (
+CREATE TABLE transactions (
 user_id INT NOT NULL,
 book_id INT NOT NULL,
 date_borrowed DATETIME NOT NULL,
@@ -102,6 +102,47 @@ FOREIGN KEY (user_id)
 REFERENCES person (user_id),
 FOREIGN KEY (book_id)
 REFERENCES book_info (book_id)
+);
+
+CREATE TABLE author_has_book (
+author_id INT NOT NULL,
+book_id INT NOT NULL,
+PRIMARY KEY (author_id, book_id),
+FOREIGN KEY (author_id)
+REFERENCES author (author_id),
+FOREIGN KEY (book_id)
+REFERENCES book_info (book_id)
+);*/
+
+/*CREATE TABLE location (
+location_id INT NOT NULL,
+location VARCHAR(45),
+address_id INT NOT NULL,
+PRIMARY KEY (location_id),
+FOREIGN KEY (address_id)
+REFERENCES address (address_id)
+)
+
+CREATE TABLE events (
+id_event INT NOT NULL,
+title VARCHAR(45),
+event_start DATETIME NOT NULL,
+event_end DATETIME NOT NULL,
+description VARCHAR(45),
+location_id INT NOT NULL,
+PRIMARY KEY (id_event),
+FOREIGN KEY (location_id)
+REFERENCES location (location_id)
+);
+
+CREATE TABLE event_has_user (
+id_event INT NOT NULL,
+user_id INT NOT NULL,
+is_organizer TINYINT,
+FOREIGN KEY (id_event)
+REFERENCES events (id_event),
+FOREIGN KEY (user_id)
+REFERENCES person (user_id)
 );*/
 
 
