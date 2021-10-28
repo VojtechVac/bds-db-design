@@ -49,56 +49,189 @@ CREATE TABLE public.user_has_role (
 		ON UPDATE NO ACTION
 );
 
-
-
-
-
-
-CREATE TABLE author (
-author_id INT NOT NULL,
-first_name VARCHAR(45),
-last_name VARCHAR(45),
-PRIMARY KEY (author_id)
+/* AUTHOR TABLE */
+CREATE TABLE public.author (
+	author_id BIGSERIAL NOT NULL,
+	first_name VARCHAR(45) NOT NULL,
+	last_name VARCHAR(45) NOT NULL,
+	PRIMARY KEY (author_id)
 );
 
-CREATE TABLE book_info (
-book_id INT NOT NULL,
-author VARCHAR(45),
-name VARCHAR(45),
-year VARCHAR(45),
-isbn VARCHAR(45),
-PRIMARY KEY (book_id)
+/* BOOK INFO TABLE */
+CREATE TABLE public.book_info (
+	book_id BIGSERIAL NOT NULL,
+	author VARCHAR(45) NOT NULL,
+	name VARCHAR(45) NOT NULL,
+	year INT NOT NULL,
+	isbn VARCHAR(45) NOT NULL,
+	PRIMARY KEY (book_id)
 );
 
-CREATE TABLE book_borrowed (
-user_id INT NOT NULL,
-book_id INT NOT NULL,
-PRIMARY KEY (user_id, book_id),
-FOREIGN KEY (user_id)
-REFERENCES person (user_id),
-FOREIGN KEY (book_id)
-REFERENCES book_info (book_id)
+CREATE TABLE public.person_has_book (
+	user_id BIGSERIAL NOT NULL,
+	book_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (user_id, book_id),
+	CONSTRAINT fk_user_has_book_person1
+		FOREIGN KEY (user_id)
+		REFERENCES public.person (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_user_has_book_book1
+		FOREIGN KEY (book_id)
+		REFERENCES public.book_info (book_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
 );
 
-CREATE TABLE address (
-address_id INT NOT NULL,
-city VARCHAR(45),
-street VARCHAR(45),
-house_number INT,
-zip_code INT,
-PRIMARY KEY(address_id)
+CREATE TABLE public.author_has_book (
+	author_id BIGSERIAL NOT NULL,
+	book_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (author_id, book_id),
+	CONSTRAINT fk_author_has_book_author1
+		FOREIGN KEY (author_id)
+		REFERENCES public.author (author_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_author_has_book_book1
+		FOREIGN KEY (book_id)
+		REFERENCES public.book_info (book_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
 );
 
-CREATE TABLE user_has_address (
-user_id INT NOT NULL,
-address_id INT(8),
-address_type VARCHAR(45),
-PRIMARY KEY (user_id, address_id),
-FOREIGN KEY (user_id)
-REFERENCES person (user_id),
-FOREIGN KEY (address_id)
-REFERENCES address (address_id)
-);*/
+CREATE TABLE public.address (
+	address_id BIGSERIAL NOT NULL,
+	city VARCHAR(45) NOT NULL,
+	street VARCHAR(45) NOT NULL,
+	house_number INT NOT NULL,
+	zip_code INT NOT NULL,
+	PRIMARY KEY(address_id)
+);
+
+CREATE TABLE public.user_has_address (
+	user_id BIGSERIAL NOT NULL,
+	address_id BIGSERIAL NOT NULL,
+	address_type VARCHAR(45),
+	PRIMARY KEY (user_id, address_id),
+	CONSTRAINT fk_user_has_address_user1
+		FOREIGN KEY (user_id)
+		REFERENCES public.person (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_user_has_address_address1
+		FOREIGN KEY (address_id)
+		REFERENCES public.address (address_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.transactions (
+	user_id BIGSERIAL NOT NULL,
+	book_id BIGSERIAL NOT NULL,
+	date_borrowed TIMESTAMP NOT NULL,
+	date_due TIMESTAMP NOT NULL,
+	date_returned TIMESTAMP NOT NULL,
+	PRIMARY KEY (user_id, book_id),
+	CONSTRAINT fk_transactions_user1
+		FOREIGN KEY (user_id)
+		REFERENCES public.person (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_transactions_book1
+		FOREIGN KEY (book_id)
+		REFERENCES public.book_info (book_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.location (
+	location_id BIGSERIAL NOT NULL,
+	location VARCHAR(45) NOT NULL,
+	address_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (location_id),
+	CONSTRAINT fk_location_address1
+		FOREIGN KEY (address_id)
+		REFERENCES public.address (address_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.event (
+	id_event BIGSERIAL NOT NULL,
+	title VARCHAR(45) NOT NULL,
+	event_start DATETIME NOT NULL,
+	event_end DATETIME NOT NULL,
+	description VARCHAR(45) NOT NULL,
+	location_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (id_event, location_id),
+	UNIQUE (id_event),
+	CONSTRAINT fk_event_location1
+		FOREIGN KEY (location_id)
+		REFERENCES public.location (location_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.event_has_user (
+	id_event BIGSERIAL NOT NULL,
+	user_id BIGSERIAL NOT NULL,
+	is_organizer TINYINT,
+	PRIMARY KEY (id_event, user_id),
+	CONSTRAINT fk_event_has_user_event1
+		FOREIGN KEY (id_event)
+		REFERENCES events (id_event)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_event_has_user_user1
+		FOREIGN KEY (user_id)
+		REFERENCES person (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+=====================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -108,6 +241,7 @@ ALTER TABLE book_info ADD COLUMN author INT NOT NULL;
 ALTER TABLE book_info ADD PRIMARY KEY (author);*/
 
 /*ALTER TABLE book_info ADD CONSTRAINT test FOREIGN KEY (author) REFERENCES author (author_id);*/
+
 
 /* TAKTO MA BYT BOOK_INFO */
 /*CREATE TABLE book_info (
@@ -120,60 +254,3 @@ PRIMARY KEY (book_id, author_id),
 FOREIGN KEY (author_id)
 REFERENCES author (author_id)
 );
-
-CREATE TABLE transactions (
-user_id INT NOT NULL,
-book_id INT NOT NULL,
-date_borrowed DATETIME NOT NULL,
-date_due DATETIME NOT NULL,
-date_returned DATETIME NOT NULL,
-PRIMARY KEY (user_id, book_id),
-FOREIGN KEY (user_id)
-REFERENCES person (user_id),
-FOREIGN KEY (book_id)
-REFERENCES book_info (book_id)
-);
-
-CREATE TABLE author_has_book (
-author_id INT NOT NULL,
-book_id INT NOT NULL,
-PRIMARY KEY (author_id, book_id),
-FOREIGN KEY (author_id)
-REFERENCES author (author_id),
-FOREIGN KEY (book_id)
-REFERENCES book_info (book_id)
-);*/
-
-/*CREATE TABLE location (
-location_id INT NOT NULL,
-location VARCHAR(45),
-address_id INT NOT NULL,
-PRIMARY KEY (location_id),
-FOREIGN KEY (address_id)
-REFERENCES address (address_id)
-)
-
-CREATE TABLE events (
-id_event INT NOT NULL,
-title VARCHAR(45),
-event_start DATETIME NOT NULL,
-event_end DATETIME NOT NULL,
-description VARCHAR(45),
-location_id INT NOT NULL,
-PRIMARY KEY (id_event),
-FOREIGN KEY (location_id)
-REFERENCES location (location_id)
-);
-
-CREATE TABLE event_has_user (
-id_event INT NOT NULL,
-user_id INT NOT NULL,
-is_organizer TINYINT,
-FOREIGN KEY (id_event)
-REFERENCES events (id_event),
-FOREIGN KEY (user_id)
-REFERENCES person (user_id)
-);*/
-
-
-
