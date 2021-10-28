@@ -1,0 +1,179 @@
+-- Database: librabry-db
+
+-- DROP DATABASE IF EXISTS "librabry-db";
+
+CREATE DATABASE "librabry-db"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.utf8'
+    LC_CTYPE = 'en_US.utf8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+
+
+/* PERSON TABLE */
+CREATE TABLE public.person (
+	user_id BIGSERIAL NOT NULL,
+	first_name VARCHAR(20) NOT NULL,
+	last_name VARCHAR(20) NOT NULL,
+	mail VARCHAR(45) NOT NULL,
+	roles_id BIGSERIAL NOT NULL,
+	address_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (user_id)
+);
+
+
+/* ROLES TABLE */
+CREATE TABLE public.role (
+	role_id BIGSERIAL NOT NULL,
+	role_type VARCHAR(45) NOT NULL,
+	PRIMARY KEY (role_id)
+);
+
+/* USER_HAS_ROLE TABLE */
+CREATE TABLE public.user_has_role (
+	person_id BIGSERIAL NOT NULL,
+	role_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (person_id, role_id),
+	CONSTRAINT fk_user_has_role_person1
+		FOREIGN KEY (person_id)
+		REFERENCES public.person (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_user_has_role_role1
+		FOREIGN KEY (role_id)
+		REFERENCES public.role (role_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+
+
+
+
+
+CREATE TABLE author (
+author_id INT NOT NULL,
+first_name VARCHAR(45),
+last_name VARCHAR(45),
+PRIMARY KEY (author_id)
+);
+
+CREATE TABLE book_info (
+book_id INT NOT NULL,
+author VARCHAR(45),
+name VARCHAR(45),
+year VARCHAR(45),
+isbn VARCHAR(45),
+PRIMARY KEY (book_id)
+);
+
+CREATE TABLE book_borrowed (
+user_id INT NOT NULL,
+book_id INT NOT NULL,
+PRIMARY KEY (user_id, book_id),
+FOREIGN KEY (user_id)
+REFERENCES person (user_id),
+FOREIGN KEY (book_id)
+REFERENCES book_info (book_id)
+);
+
+CREATE TABLE address (
+address_id INT NOT NULL,
+city VARCHAR(45),
+street VARCHAR(45),
+house_number INT,
+zip_code INT,
+PRIMARY KEY(address_id)
+);
+
+CREATE TABLE user_has_address (
+user_id INT NOT NULL,
+address_id INT(8),
+address_type VARCHAR(45),
+PRIMARY KEY (user_id, address_id),
+FOREIGN KEY (user_id)
+REFERENCES person (user_id),
+FOREIGN KEY (address_id)
+REFERENCES address (address_id)
+);*/
+
+
+
+
+/*ALTER TABLE book_info DROP COLUMN author;
+ALTER TABLE book_info ADD COLUMN author INT NOT NULL;
+ALTER TABLE book_info ADD PRIMARY KEY (author);*/
+
+/*ALTER TABLE book_info ADD CONSTRAINT test FOREIGN KEY (author) REFERENCES author (author_id);*/
+
+/* TAKTO MA BYT BOOK_INFO */
+/*CREATE TABLE book_info (
+book_id INT NOT NULL,
+author_id INT NOT NULL,
+name VARCHAR(45),
+year VARCHAR(45),
+isbn VARCHAR(45),
+PRIMARY KEY (book_id, author_id),
+FOREIGN KEY (author_id)
+REFERENCES author (author_id)
+);
+
+CREATE TABLE transactions (
+user_id INT NOT NULL,
+book_id INT NOT NULL,
+date_borrowed DATETIME NOT NULL,
+date_due DATETIME NOT NULL,
+date_returned DATETIME NOT NULL,
+PRIMARY KEY (user_id, book_id),
+FOREIGN KEY (user_id)
+REFERENCES person (user_id),
+FOREIGN KEY (book_id)
+REFERENCES book_info (book_id)
+);
+
+CREATE TABLE author_has_book (
+author_id INT NOT NULL,
+book_id INT NOT NULL,
+PRIMARY KEY (author_id, book_id),
+FOREIGN KEY (author_id)
+REFERENCES author (author_id),
+FOREIGN KEY (book_id)
+REFERENCES book_info (book_id)
+);*/
+
+/*CREATE TABLE location (
+location_id INT NOT NULL,
+location VARCHAR(45),
+address_id INT NOT NULL,
+PRIMARY KEY (location_id),
+FOREIGN KEY (address_id)
+REFERENCES address (address_id)
+)
+
+CREATE TABLE events (
+id_event INT NOT NULL,
+title VARCHAR(45),
+event_start DATETIME NOT NULL,
+event_end DATETIME NOT NULL,
+description VARCHAR(45),
+location_id INT NOT NULL,
+PRIMARY KEY (id_event),
+FOREIGN KEY (location_id)
+REFERENCES location (location_id)
+);
+
+CREATE TABLE event_has_user (
+id_event INT NOT NULL,
+user_id INT NOT NULL,
+is_organizer TINYINT,
+FOREIGN KEY (id_event)
+REFERENCES events (id_event),
+FOREIGN KEY (user_id)
+REFERENCES person (user_id)
+);*/
+
+
+
