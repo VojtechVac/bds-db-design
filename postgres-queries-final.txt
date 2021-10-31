@@ -1,0 +1,200 @@
+-- Database: librabry-db
+
+-- DROP DATABASE IF EXISTS "librabry-db";
+
+CREATE DATABASE "librabry-db"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.utf8'
+    LC_CTYPE = 'en_US.utf8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+
+
+/* USER TABLE */
+CREATE TABLE public.user (
+	user_id BIGSERIAL NOT NULL,
+	first_name VARCHAR(20) NOT NULL,
+	last_name VARCHAR(20) NOT NULL,
+	mail VARCHAR(45) NOT NULL,
+	phone VARCHAR(15) NOT NULL,
+	roles_id BIGSERIAL NOT NULL,
+	address_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (user_id)
+);
+
+CREATE TABLE public.contact (
+  phone VARCHAR(15) NOT NULL,
+  mail VARCHAR(45) NOT NULL,
+  user_id INT NOT NULL,
+  PRIMARY KEY (user_id),
+  CONSTRAINT fk_contact_user
+    FOREIGN KEY (user_id)
+    REFERENCES public.user (user_id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.role (
+	role_id BIGSERIAL NOT NULL,
+	role_type VARCHAR(45) NOT NULL,
+	PRIMARY KEY (role_id)
+);
+
+CREATE TABLE public.user_has_role (
+	user_id BIGSERIAL NOT NULL,
+	role_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (user_id, role_id),
+	CONSTRAINT fk_user_has_role_user1
+		FOREIGN KEY (user_id)
+		REFERENCES public.user (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_user_has_role_role1
+		FOREIGN KEY (role_id)
+		REFERENCES public.role (role_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.author (
+	author_id BIGSERIAL NOT NULL,
+	first_name VARCHAR(45) NOT NULL,
+	last_name VARCHAR(45) NOT NULL,
+	PRIMARY KEY (author_id)
+);
+
+CREATE TABLE public.book_info (
+	book_id BIGSERIAL NOT NULL,
+	author VARCHAR(45) NOT NULL,
+	name VARCHAR(45) NOT NULL,
+	genre VARCHAR(45) NOT NULL,
+	year INT NOT NULL,
+	isbn VARCHAR(45) NOT NULL,
+	PRIMARY KEY (book_id)
+);
+
+CREATE TABLE public.user_has_book (
+	user_id BIGSERIAL NOT NULL,
+	book_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (user_id, book_id),
+	CONSTRAINT fk_user_has_book_user1
+		FOREIGN KEY (user_id)
+		REFERENCES public.user (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_user_has_book_book1
+		FOREIGN KEY (book_id)
+		REFERENCES public.book_info (book_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.author_has_book (
+	author_id BIGSERIAL NOT NULL,
+	book_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (author_id, book_id),
+	CONSTRAINT fk_author_has_book_author1
+		FOREIGN KEY (author_id)
+		REFERENCES public.author (author_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_author_has_book_book1
+		FOREIGN KEY (book_id)
+		REFERENCES public.book_info (book_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.address (
+	address_id BIGSERIAL NOT NULL,
+	city VARCHAR(45) NOT NULL,
+	street VARCHAR(45) NOT NULL,
+	house_number INT NOT NULL,
+	zip_code INT NOT NULL,
+	PRIMARY KEY(address_id)
+);
+
+CREATE TABLE public.user_has_address (
+	user_id BIGSERIAL NOT NULL,
+	address_id BIGSERIAL NOT NULL,
+	address_type VARCHAR(45),
+	PRIMARY KEY (user_id, address_id),
+	CONSTRAINT fk_user_has_address_user1
+		FOREIGN KEY (user_id)
+		REFERENCES public.user (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_user_has_address_address1
+		FOREIGN KEY (address_id)
+		REFERENCES public.address (address_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.transactions (
+	user_id BIGSERIAL NOT NULL,
+	book_id BIGSERIAL NOT NULL,
+	date_borrowed TIMESTAMP NOT NULL,
+	date_due TIMESTAMP NOT NULL,
+	date_returned TIMESTAMP NOT NULL,
+	price INT NOT NULL,
+	PRIMARY KEY (user_id, book_id),
+	CONSTRAINT fk_transactions_user1
+		FOREIGN KEY (user_id)
+		REFERENCES public.user (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_transactions_book1
+		FOREIGN KEY (book_id)
+		REFERENCES public.book_info (book_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.location (
+	location_id BIGSERIAL NOT NULL,
+	location VARCHAR(45) NOT NULL,
+	address_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (location_id),
+	CONSTRAINT fk_location_address1
+		FOREIGN KEY (address_id)
+		REFERENCES public.address (address_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.event (
+	id_event BIGSERIAL NOT NULL,
+	title VARCHAR(45) NOT NULL,
+	event_start DATETIME NOT NULL,
+	event_end DATETIME NOT NULL,
+	description VARCHAR(45) NOT NULL,
+	location_id BIGSERIAL NOT NULL,
+	PRIMARY KEY (id_event, location_id),
+	UNIQUE (id_event),
+	CONSTRAINT fk_event_location1
+		FOREIGN KEY (location_id)
+		REFERENCES public.location (location_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
+
+CREATE TABLE public.event_has_user (
+	id_event BIGSERIAL NOT NULL,
+	user_id BIGSERIAL NOT NULL,
+	is_organizer TINYINT,
+	PRIMARY KEY (id_event, user_id),
+	CONSTRAINT fk_event_has_user_event1
+		FOREIGN KEY (id_event)
+		REFERENCES public.event (id_event)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_event_has_user_user1
+		FOREIGN KEY (user_id)
+		REFERENCES public.user (user_id)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+);
