@@ -12,8 +12,6 @@ CREATE DATABASE "librabry-db"
     CONNECTION LIMIT = -1;
 
 
-
-/* USER TABLE */
 CREATE TABLE public.user (
 	user_id BIGSERIAL NOT NULL,
 	first_name VARCHAR(20) NOT NULL,
