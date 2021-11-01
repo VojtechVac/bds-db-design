@@ -6,8 +6,8 @@ CREATE TABLE public.user (
 );
 
 CREATE TABLE public.contact (
-  phone VARCHAR(15) NOT NULL,
-  mail VARCHAR(45) NOT NULL,
+  phone VARCHAR(15) NULL,
+  mail VARCHAR(45) NULL,
   user_id INT NOT NULL,
   PRIMARY KEY (user_id),
   CONSTRAINT fk_contact_user
@@ -48,7 +48,6 @@ CREATE TABLE public.author (
 
 CREATE TABLE public.book_info (
 	book_id BIGSERIAL NOT NULL,
-	author VARCHAR(45) NOT NULL,
 	name VARCHAR(45) NOT NULL,
 	genre VARCHAR(45) NOT NULL,
 	year INT NOT NULL,
@@ -151,7 +150,7 @@ CREATE TABLE public.event (
 	title VARCHAR(45) NOT NULL,
 	event_start TIMESTAMP NOT NULL,
 	event_end TIMESTAMP NOT NULL,
-	description VARCHAR(45) NOT NULL,
+	description VARCHAR(45) NULL,
 	location_id BIGSERIAL NOT NULL,
 	PRIMARY KEY (id_event, location_id),
 	UNIQUE (id_event),
