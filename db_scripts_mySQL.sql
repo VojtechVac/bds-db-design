@@ -1,5 +1,4 @@
 /*
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone="+00:00";
 
@@ -162,4 +161,17 @@ CREATE TABLE `event_has_user` (
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 );
+
+CREATE TABLE `contact` (
+	`user_id` INT NOT NULL,
+	`phone` VARCHAR(15) NOT NULL,
+    `mail`	VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`user_id`),
+    CONSTRAINT `fk_contact_user1`
+    FOREIGN KEY(`user_id`)
+    REFERENCES user (`user_id`)
+    ON DELETE NO ACTION
+	ON UPDATE NO ACTION
+);
+
 */
