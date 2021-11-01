@@ -2,10 +2,6 @@ CREATE TABLE public.user (
 	user_id BIGSERIAL NOT NULL,
 	first_name VARCHAR(20) NOT NULL,
 	last_name VARCHAR(20) NOT NULL,
-	mail VARCHAR(45) NOT NULL,
-	phone VARCHAR(15) NOT NULL,
-	roles_id BIGSERIAL NOT NULL,
-	address_id BIGSERIAL NOT NULL,
 	PRIMARY KEY (user_id)
 );
 

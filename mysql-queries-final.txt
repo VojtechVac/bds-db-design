@@ -8,9 +8,6 @@ CREATE TABLE IF NOT EXISTS `library-db`.`user`(
 	`user_id` INT NOT NULL,
     `first_name` VARCHAR(20) NOT NULL,
     `last_name` VARCHAR(20) NOT NULL,
-    `mail` VARCHAR(45) NOT NULL,
-    `roles_id` INT NOT NULL,
-    `address_id` INT NOT NULL,
     PRIMARY KEY (`user_id`)
 );
 CREATE TABLE IF NOT EXISTS `library-db`.`role`(
@@ -182,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `library-db`.`event_has_user` (
 CREATE TABLE IF NOT EXISTS `library-db`.`contact` (
 	`user_id` INT NOT NULL,
 	`phone` VARCHAR(15) NOT NULL,
-    `mail`	VARCHAR(45) NOT NULL,
+    	`mail`	VARCHAR(45) NOT NULL,
     PRIMARY KEY (`user_id`),
     INDEX `fk_contact_user1_idx` (`user_id` ASC),
     CONSTRAINT `fk_contact_user1`
