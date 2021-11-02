@@ -8,9 +8,6 @@ CREATE TABLE IF NOT EXISTS `library-db`.`user`(
 	`user_id` INT NOT NULL,
     `first_name` VARCHAR(20) NOT NULL,
     `last_name` VARCHAR(20) NOT NULL,
-    `mail` VARCHAR(45) NOT NULL,
-    `roles_id` INT NOT NULL,
-    `address_id` INT NOT NULL,
     PRIMARY KEY (`user_id`)
 );
 CREATE TABLE IF NOT EXISTS `library-db`.`role`(
@@ -43,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `library-db`.`author` (
 );
 CREATE TABLE IF NOT EXISTS `library-db`.`book_info`(
 	`book_id` INT NOT NULL,
-	`author` VARCHAR(45) NOT NULL,
 	`name` VARCHAR(45) NOT NULL,
 	`genre` VARCHAR(45) NOT NULL,
 	`year` INT NOT NULL,
@@ -148,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `library-db`.`event` (
 	`title` VARCHAR(45) NOT NULL,
 	`event_start` DATETIME NOT NULL,
 	`event_end` DATETIME NOT NULL,
-	`description` VARCHAR(45) NOT NULL,
+	`description` VARCHAR(45) NULL,
 	`location_id` INT NOT NULL,
 	PRIMARY KEY (`id_event`, `location_id`),
     INDEX `fk_event_location1_idx` (`location_id` ASC),
@@ -164,7 +160,6 @@ CREATE TABLE IF NOT EXISTS `library-db`.`event_has_user` (
 	`id_event` INT NOT NULL,
 	`user_id` INT NOT NULL,
 	`is_organizer` TINYINT,
-	PRIMARY KEY (`id_event`, `user_id`),
     INDEX `fk_event_has_user_event1_idx` (`id_event` ASC),
 	INDEX `fk_event_has_user_user1_idx` (`user_id` ASC),
 	CONSTRAINT `fk_event_has_user_event1`
