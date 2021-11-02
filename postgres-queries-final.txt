@@ -1,3 +1,17 @@
+-- Database: librabry-db
+
+-- DROP DATABASE IF EXISTS "librabry-db";
+
+CREATE DATABASE "librabry-db"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.utf8'
+    LC_CTYPE = 'en_US.utf8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+
 CREATE TABLE public.user (
 	user_id BIGSERIAL NOT NULL,
 	first_name VARCHAR(20) NOT NULL,
@@ -6,8 +20,8 @@ CREATE TABLE public.user (
 );
 
 CREATE TABLE public.contact (
-  phone VARCHAR(15) NULL,
-  mail VARCHAR(45) NULL,
+  phone VARCHAR(15) NOT NULL,
+  mail VARCHAR(45) NOT NULL,
   user_id INT NOT NULL,
   PRIMARY KEY (user_id),
   CONSTRAINT fk_contact_user
@@ -165,7 +179,6 @@ CREATE TABLE public.event_has_user (
 	id_event BIGSERIAL NOT NULL,
 	user_id BIGSERIAL NOT NULL,
 	is_organizer SMALLINT,
-	PRIMARY KEY (id_event, user_id),
 	CONSTRAINT fk_event_has_user_event1
 		FOREIGN KEY (id_event)
 		REFERENCES public.event (id_event)
